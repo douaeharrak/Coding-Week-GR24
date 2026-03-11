@@ -246,7 +246,7 @@ def optimize_memory(df):
 
 # PIPELINE COMPLET — run_preprocessing
 
-def run_preprocessing(path='bone_marrow_clean.csv', target_col='survival_status'):
+def run_preprocessing(path='data/processed/bone_marrow_clean.csv', target_col='survival_status'):
     """
     Pipeline complet appelé dans train_model.py.
     Enchaîne toutes les étapes dans le bon ordre.
@@ -288,7 +288,7 @@ def run_preprocessing(path='bone_marrow_clean.csv', target_col='survival_status'
 
 if __name__ == '__main__':
     X, y, scaler = run_preprocessing(
-        path='Notebooks/bone_marrow_clean.csv',
+        path='data/processed/bone_marrow_clean.csv',
         target_col='survival_status'
     )
     print(f'Shape X : {X.shape}')

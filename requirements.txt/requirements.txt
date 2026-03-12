@@ -1,0 +1,37 @@
+# DEPENDANCES PRINCIPALES - PROJET GREFFE MOELLE OSSEUSE
+
+# Manipulation des données 
+numpy>=1.21.0
+pandas>=1.3.0
+
+# Machine Learning  
+scikit-learn>=1.0.0
+xgboost>=1.5.0
+lightgbm>=3.3.0
+imbalanced-learn>=0.8.0  # Pour SMOTE
+
+#  Visualisation et explication 
+shap>=0.40.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+#  Web application 
+streamlit>=1.10.0  
+
+# Chargement des données 
+ucimlrepo>=0.0.3
+liac-arff>=2.5.0   # Pour les fichiers ARFF
+
+# Sauvegarde des modèles 
+joblib>=1.1.0
+
+# DEPENDANCES DE DEVELOPPEMENT
+
+# Tests 
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-mock>=3.7.0
+
+# Qualité du code 
+flake8>=4.0.0
+black>=22.0.0

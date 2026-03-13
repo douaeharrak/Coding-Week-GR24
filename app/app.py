@@ -86,28 +86,28 @@ html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
                   background:linear-gradient(180deg,#60a5fa,#818cf8); flex-shrink:0; }
 
 .section-title {
-    font-family: 'DM Serif Display', serif; font-size: 1.0rem; color: #334155;
-    margin: 1.4rem 0 0.6rem 0; padding-bottom: 0.4rem; border-bottom: 1.5px solid #e2e8f0;
+    font-family:'DM Serif Display',serif; font-size:1.0rem; color:#334155;
+    margin:1.4rem 0 0.6rem 0; padding-bottom:0.4rem; border-bottom:1.5px solid #e2e8f0;
 }
 div[data-testid="stForm"] {
-    border: none !important; box-shadow: none !important;
-    padding: 0 !important; background: transparent !important;
+    border:none !important; box-shadow:none !important;
+    padding:0 !important; background:transparent !important;
 }
 .form-title    { text-align:center; font-family:'DM Serif Display',serif;
                  font-size:1.2rem; color:#1e1b4b; margin-bottom:0.1rem; font-weight:600; }
 .form-subtitle { text-align:center; font-size:0.8rem; color:#818cf8; margin-bottom:1.2rem; }
 
 div.stButton > button {
-    background: linear-gradient(135deg, #60a5fa, #818cf8); color: white;
-    border: none; border-radius: 10px; padding: 0.65rem 2rem;
-    font-size: 0.95rem; font-weight: 600; font-family: 'DM Sans', sans-serif;
-    transition: opacity 0.2s; width: 100%;
+    background:linear-gradient(135deg,#60a5fa,#818cf8); color:white;
+    border:none; border-radius:10px; padding:0.65rem 2rem;
+    font-size:0.95rem; font-weight:600; font-family:'DM Sans',sans-serif;
+    transition:opacity 0.2s; width:100%;
 }
-div.stButton > button:hover { opacity: 0.88; }
+div.stButton > button:hover { opacity:0.88; }
 
 .warning-box {
-    background: #fff7ed; border: 1px solid #fed7aa; border-radius: 10px;
-    padding: 0.8rem 1.2rem; margin-bottom: 0.8rem; font-size: 0.83rem; color: #9a3412;
+    background:#fff7ed; border:1px solid #fed7aa; border-radius:10px;
+    padding:0.8rem 1.2rem; margin-bottom:0.8rem; font-size:0.83rem; color:#9a3412;
 }
 .result-card   { border-radius:14px; padding:1.5rem 2rem; margin-top:1rem; text-align:center; }
 .result-high   { background:#f0fdf4; border:2px solid #22c55e; }
@@ -166,16 +166,13 @@ with st.form("patient_data"):
     st.markdown('<p class="section-title">👤 Receveur (Patient)</p>', unsafe_allow_html=True)
     c1, c2, c3 = st.columns(3, gap="medium")
     with c1:
-        Recipientage = st.number_input(
-            "Âge du receveur (années)", min_value=0, max_value=20, value=8, step=1)
+        Recipientage = st.number_input("Âge du receveur (années)", min_value=0, max_value=20, value=8, step=1)
     with c2:
-        Recipientgender = st.selectbox(
-            "Sexe du receveur", [1, 0],
-            format_func=lambda x: "Masculin" if x == 1 else "Féminin")
+        Recipientgender = st.selectbox("Sexe du receveur", [1, 0],
+                                       format_func=lambda x: "Masculin" if x == 1 else "Féminin")
     with c3:
-        Rbodymass_str = st.text_input(
-            "Poids du receveur (kg)", value="30",
-            help="Entrez un nombre entre 3 et 150, ex : 28.5")
+        Rbodymass_str = st.text_input("Poids du receveur (kg)", value="30",
+                                      help="Ex : 28.5")
 
     c4, c5, c6 = st.columns(3, gap="medium")
     with c4:
@@ -183,8 +180,7 @@ with st.form("patient_data"):
                                     format_func=lambda x: ["0","A","B","AB"][x])
     with c5:
         RecipientCMV = st.selectbox("CMV receveur", [0, 1],
-                                    format_func=lambda x: "Absent" if x == 0 else "Présent",
-                                    help="Statut sérologique Cytomégalovirus")
+                                    format_func=lambda x: "Absent" if x == 0 else "Présent")
     with c6:
         Recipientage10 = st.selectbox("Receveur < 10 ans ?", [0, 1],
                                       format_func=lambda x: "Non" if x == 0 else "Oui")
@@ -192,9 +188,8 @@ with st.form("patient_data"):
     st.markdown('<p class="section-title">🧬 Donneur</p>', unsafe_allow_html=True)
     d1, d2, d3 = st.columns(3, gap="medium")
     with d1:
-        Donorage_str = st.text_input(
-            "Âge du donneur (années)", value="30",
-            help="Un donneur < 35 ans est un facteur favorable")
+        Donorage_str = st.text_input("Âge du donneur (années)", value="30",
+                                     help="Un donneur < 35 ans est un facteur favorable")
     with d2:
         DonorABO = st.selectbox("Groupe sanguin donneur", [0, 1, 2, 3],
                                 format_func=lambda x: ["0","A","B","AB"][x])
@@ -209,8 +204,7 @@ with st.form("patient_data"):
                                 format_func=lambda x: f"{x}/10",
                                 help="10/10 = compatibilité parfaite")
     with i2:
-        HLAmismatch = st.number_input(
-            "Antigènes HLA différents", min_value=0, max_value=3, value=0, step=1)
+        HLAmismatch = st.number_input("Antigènes HLA différents", min_value=0, max_value=3, value=0, step=1)
     with i3:
         ABOmatch = st.selectbox("Compatibilité ABO", [1, 0],
                                 format_func=lambda x: "Compatible" if x == 1 else "Incompatible")
@@ -221,7 +215,7 @@ with st.form("patient_data"):
     with i5:
         Alel = st.number_input("Allèles incompatibles", min_value=0, max_value=4, value=0, step=1)
     with i6:
-        Gendermatch = st.selectbox("Concordance de sexe donneur/receveur", [1, 0],
+        Gendermatch = st.selectbox("Concordance sexe donneur/receveur", [1, 0],
                                    format_func=lambda x: "Concordant" if x == 1 else "Discordant")
 
     st.markdown('<p class="section-title">🏥 Maladie & Protocole</p>', unsafe_allow_html=True)
@@ -245,18 +239,26 @@ with st.form("patient_data"):
         Diseasegroup = st.selectbox("Groupe maladie", [0, 1],
                                     format_func=lambda x: "Non-maligne" if x == 0 else "Maligne")
     with p6:
-        CD34_str = st.text_input(
-            "Dose CD34+ (×10⁶/kg)", value="3.0",
-            help="Variable #1 selon la littérature. Ex : 3.5")
-
-    p7, p8 = st.columns(2, gap="medium")
-    with p7:
-        IIIV = st.selectbox("Stade maladie (II-IV)", [0, 1],
+        IIIV = st.selectbox("Stade maladie avancé (II-IV)", [0, 1],
                             format_func=lambda x: "Non" if x == 0 else "Oui")
-    with p8:
-        CMVstatus = st.selectbox("Statut CMV combiné donneur/receveur", [0, 1, 2, 3],
+
+    p7, = st.columns(1)
+    with p7:
+        CMVstatus = st.selectbox("Statut CMV combiné", [0, 1, 2, 3],
                                  format_func=lambda x: ["−/−","−/+","+/−","+/+"][x],
-                                 help="Combinaison statut CMV donneur / receveur")
+                                 help="Statut CMV donneur / receveur")
+
+    st.markdown('<p class="section-title">💉 Données de la Greffe</p>', unsafe_allow_html=True)
+    g1, g2, g3 = st.columns(3, gap="medium")
+    with g1:
+        CD34_str = st.text_input("Dose CD34+ (×10⁶/kg)", value="3.0",
+                                 help="Variable #1 selon la littérature. Ex : 3.5")
+    with g2:
+        CD3dCD34_str = st.text_input("Ratio CD3/CD34", value="1.0",
+                                     help="Rapport CD3d/CD34. Ex : 1.0")
+    with g3:
+        CD3dkgx10d8_str = st.text_input("CD3+ (×10⁸/kg)", value="2.0",
+                                        help="Dose de lymphocytes T CD3+. Ex : 2.0")
 
     st.markdown("<div style='margin-top:0.6rem'></div>", unsafe_allow_html=True)
     submit = st.form_submit_button("⚡ Calculer la probabilité de succès")
@@ -284,31 +286,42 @@ if submit:
     try:
         CD34kgx10d6 = float(str(CD34_str).replace(",", ".").strip())
         if not (0.1 <= CD34kgx10d6 <= 30.0):
-            errors.append("Dose CD34+ hors plage — attendu entre 0.1 et 30 ×10⁶/kg.")
+            errors.append("Dose CD34+ hors plage — attendu entre 0.1 et 30.")
     except ValueError:
         errors.append(f"Dose CD34+ invalide : « {CD34_str} » — entrez un nombre, ex : 3.5")
         CD34kgx10d6 = None
+
+    try:
+        CD3dCD34 = float(str(CD3dCD34_str).replace(",", ".").strip())
+    except ValueError:
+        errors.append(f"Ratio CD3/CD34 invalide : « {CD3dCD34_str} » — entrez un nombre, ex : 1.0")
+        CD3dCD34 = None
+
+    try:
+        CD3dkgx10d8 = float(str(CD3dkgx10d8_str).replace(",", ".").strip())
+    except ValueError:
+        errors.append(f"CD3+ invalide : « {CD3dkgx10d8_str} » — entrez un nombre, ex : 2.0")
+        CD3dkgx10d8 = None
 
     if errors:
         for err in errors:
             st.markdown(f'<div class="warning-box">⚠️ {err}</div>', unsafe_allow_html=True)
         st.stop()
 
-    # ── Alertes cliniques non bloquantes ──
     warnings_list = []
     if Recipientage < 10:
         warnings_list.append("🔴 Receveur pédiatrique critique (< 10 ans) — protocole adapté recommandé.")
     if Donorage and Donorage >= 35:
-        warnings_list.append("🟡 Âge du donneur ≥ 35 ans — facteur moins favorable selon la littérature.")
+        warnings_list.append("🟡 Âge du donneur ≥ 35 ans — facteur moins favorable.")
     if DonorCMV == 1 and RecipientCMV == 0:
-        warnings_list.append("🟠 CMV donneur+ / receveur− — risque de réactivation CMV post-greffe élevé.")
+        warnings_list.append("🟠 CMV donneur+ / receveur− — risque de réactivation élevé.")
     if HLAmatch <= 8:
         warnings_list.append("🟡 Compatibilité HLA incomplète — risque de GvHD accru.")
     if Txpostrelapse == 1:
         warnings_list.append("🟠 Greffe post-rechute — pronostic plus réservé.")
 
     if not HAS_MODEL:
-        st.info("ℹ️ Aucun modèle détecté — la prédiction est simulée. Lancez `python src/train_model.py`.")
+        st.info("ℹ️ Aucun modèle détecté — la prédiction est simulée.")
     elif not HAS_SCALER:
         st.warning("⚠️ `models/scaler.pkl` introuvable — données non normalisées.")
 
@@ -321,40 +334,39 @@ if submit:
         st.stop()
 
     try:
-        # Donorage35 : variable binaire dérivée (1 si donneur < 35 ans)
-        Donorage35 = 1 if (Donorage and Donorage < 35) else 0
-        # Recipientageint : tranche d'âge (0=<5, 1=5-10, 2=10-15, 3=>15)
+        Donorage35      = 1 if (Donorage and Donorage < 35) else 0
         Recipientageint = 0 if Recipientage < 5 else (1 if Recipientage < 10 else (2 if Recipientage < 15 else 3))
-        # HLAgrI : score HLA global (simplifié : HLAmatch / 10)
-        HLAgrI = round(HLAmatch / 10, 1)
+        HLAgrI          = round(HLAmatch / 10, 1)
 
         input_df = pd.DataFrame([{
-            "Recipientgender":  Recipientgender,
-            "Stemcellsource":   Stemcellsource,
-            "Donorage":         Donorage,
-            "Donorage35":       Donorage35,
-            "IIIV":             IIIV,
-            "Gendermatch":      Gendermatch,
-            "DonorABO":         DonorABO,
-            "RecipientABO":     RecipientABO,
-            "ABOmatch":         ABOmatch,
-            "CMVstatus":        CMVstatus,
-            "DonorCMV":         DonorCMV,
-            "RecipientCMV":     RecipientCMV,
-            "Disease":          Disease,
-            "Riskgroup":        Riskgroup,
-            "Txpostrelapse":    Txpostrelapse,
-            "Diseasegroup":     Diseasegroup,
-            "HLAmatch":         HLAmatch,
-            "HLAmismatch":      HLAmismatch,
-            "Antigen":          Antigen,
-            "Alel":             Alel,
-            "HLAgrI":           HLAgrI,
-            "Recipientage":     Recipientage,
-            "Recipientage10":   Recipientage10,
-            "Recipientageint":  Recipientageint,
-            "CD34kgx10d6":      CD34kgx10d6,
-            "Rbodymass":        Rbodymass,
+            "Recipientgender":      Recipientgender,
+            "Stemcellsource":       Stemcellsource,
+            "Donorage":             Donorage,
+            "Donorage35":           Donorage35,
+            "IIIV":                 IIIV,
+            "Gendermatch":          Gendermatch,
+            "DonorABO":             DonorABO,
+            "RecipientABO":         RecipientABO,
+            "ABOmatch":             ABOmatch,
+            "CMVstatus":            CMVstatus,
+            "DonorCMV":             DonorCMV,
+            "RecipientCMV":         RecipientCMV,
+            "Disease":              Disease,
+            "Riskgroup":            Riskgroup,
+            "Txpostrelapse":        Txpostrelapse,
+            "Diseasegroup":         Diseasegroup,
+            "HLAmatch":             HLAmatch,
+            "HLAmismatch":          HLAmismatch,
+            "Antigen":              Antigen,
+            "Alel":                 Alel,
+            "HLAgrI":               HLAgrI,
+            "Recipientage":         Recipientage,
+            "Recipientage10":       Recipientage10,
+            "Recipientageint":      Recipientageint,
+            "CD34kgx10d6":          CD34kgx10d6,
+            "CD3dCD34":             CD3dCD34,
+            "CD3dkgx10d8":          CD3dkgx10d8,
+            "Rbodymass":            Rbodymass,
         }])
 
         input_df   = handle_missing_values(input_df)
@@ -364,10 +376,18 @@ if submit:
         if "__none__" in data_ready.columns:
             data_ready = data_ready.drop(columns=["__none__"])
 
+        # Aligner les colonnes exactement sur ce que le modèle attend
+        if HAS_MODEL and hasattr(model, "feature_names_in_"):
+            expected_cols = list(model.feature_names_in_)
+            for col in expected_cols:
+                if col not in data_ready.columns:
+                    data_ready[col] = 0
+            data_ready = data_ready[expected_cols]
+
         if HAS_SCALER:
             try:
-                scaler_cols = getattr(scaler, "feature_names_in_",
-                                      data_ready.select_dtypes(include=[np.number]).columns)
+                scaler_cols   = getattr(scaler, "feature_names_in_",
+                                        data_ready.select_dtypes(include=[np.number]).columns)
                 cols_to_scale = [c for c in scaler_cols if c in data_ready.columns]
                 if cols_to_scale:
                     data_ready[cols_to_scale] = scaler.transform(data_ready[cols_to_scale])
@@ -423,7 +443,6 @@ if submit:
         </div>
         """, unsafe_allow_html=True)
 
-        # ── SHAP ──
         st.markdown("<div style='margin-top:1rem'></div>", unsafe_allow_html=True)
 
         with st.container():
@@ -434,42 +453,59 @@ if submit:
             feature_names = list(data_ready.columns)
 
             if HAS_SHAP and HAS_MODEL:
-                explainer   = shap.Explainer(model, data_ready)
-                shap_values = explainer(data_ready).values[0]
+                try:
+                    # TreeExplainer fonctionne avec XGBoost, LightGBM, RandomForest
+                    explainer   = shap.TreeExplainer(model)
+                    shap_vals   = explainer.shap_values(data_ready)
+                    # Pour les classifieurs binaires : shap_vals peut être une liste [class0, class1]
+                    if isinstance(shap_vals, list):
+                        shap_values = shap_vals[1][0]
+                    else:
+                        shap_values = shap_vals[0]
+                except Exception:
+                    # Fallback générique
+                    explainer   = shap.Explainer(model, data_ready)
+                    shap_values = explainer(data_ready).values[0]
             else:
                 np.random.seed(int(Recipientage * 7 + (Rbodymass or 30) * 3))
                 raw = np.random.randn(len(feature_names))
                 shap_values = raw / (np.abs(raw).sum() + 1e-9) * (proba - 50) / 12
 
             label_map = {
-                "Recipientgender":  "Sexe receveur",
-                "Stemcellsource":   "Source cellules",
-                "Donorage":         "Âge donneur",
-                "Donorage35":       "Donneur < 35 ans",
-                "IIIV":             "Stade II-IV",
-                "Gendermatch":      "Concordance sexe",
-                "DonorABO":         "ABO donneur",
-                "RecipientABO":     "ABO receveur",
-                "ABOmatch":         "Compat. ABO",
-                "CMVstatus":        "CMV combiné",
-                "DonorCMV":         "CMV donneur",
-                "RecipientCMV":     "CMV receveur",
-                "Disease":          "Maladie",
-                "Riskgroup":        "Risque",
-                "Txpostrelapse":    "Post-rechute",
-                "Diseasegroup":     "Groupe maladie",
-                "HLAmatch":         "HLA match",
-                "HLAmismatch":      "HLA diff.",
-                "Antigen":          "Antigènes",
-                "Alel":             "Allèles",
-                "HLAgrI":           "Score HLA",
-                "Recipientage":     "Âge receveur",
-                "Recipientage10":   "< 10 ans",
-                "Recipientageint":  "Tranche âge",
-                "CD34kgx10d6":      "CD34+/kg",
-                "Rbodymass":        "Poids",
+                "Recipientgender":      "Sexe receveur",
+                "Stemcellsource":       "Source cellules",
+                "Donorage":             "Âge donneur",
+                "Donorage35":           "Donneur < 35 ans",
+                "IIIV":                 "Stade II-IV",
+                "Gendermatch":          "Concordance sexe",
+                "DonorABO":             "ABO donneur",
+                "RecipientABO":         "ABO receveur",
+                "ABOmatch":             "Compat. ABO",
+                "CMVstatus":            "CMV combiné",
+                "DonorCMV":             "CMV donneur",
+                "RecipientCMV":         "CMV receveur",
+                "Disease":              "Maladie (ALL)",
+                "Disease_AML":          "Maladie AML",
+                "Disease_chronic":      "Maladie chronique",
+                "Disease_lymphoma":     "Lymphome",
+                "Disease_nonmalignant": "Non-malin",
+                "Riskgroup":            "Risque",
+                "Txpostrelapse":        "Post-rechute",
+                "Diseasegroup":         "Groupe maladie",
+                "HLAmatch":             "HLA match",
+                "HLAmismatch":          "HLA diff.",
+                "Antigen":              "Antigènes",
+                "Alel":                 "Allèles",
+                "HLAgrI":               "Score HLA",
+                "Recipientage":         "Âge receveur",
+                "Recipientage10":       "< 10 ans",
+                "Recipientageint":      "Tranche âge",
+                "CD34kgx10d6":          "CD34+/kg",
+                "CD3dCD34":             "Ratio CD3/CD34",
+                "CD3dkgx10d8":          "CD3+/kg",
+                "Rbodymass":            "Poids",
             }
-            labels = [next((v for k, v in label_map.items() if k in f), f[:12]) for f in feature_names]
+            labels = [label_map.get(f, f[:14]) for f in feature_names]
 
             order        = np.argsort(np.abs(shap_values))[::-1][:8]
             shap_sorted  = shap_values[order]
@@ -516,31 +552,37 @@ if submit:
 
             with col_legend:
                 desc_map = {
-                    "Sexe receveur":    "Le sexe influence les réponses immunologiques post-greffe.",
+                    "Sexe receveur":    "Influence les réponses immunologiques post-greffe.",
                     "Source cellules":  "Moelle vs sang périphérique — impact sur la prise de greffe et le risque GvHD.",
                     "Âge donneur":      "Un donneur < 35 ans est associé à de meilleurs résultats.",
-                    "Donneur < 35 ans": "Variable binaire : donneur jeune = facteur favorable.",
-                    "Stade II-IV":      "Stade avancé de la maladie au moment de la greffe.",
-                    "Concordance sexe": "Concordance de sexe donneur/receveur réduit le risque de GvHD.",
+                    "Donneur < 35 ans": "Donneur jeune = facteur favorable démontré.",
+                    "Stade II-IV":      "Stade avancé de la maladie — pronostic plus réservé.",
+                    "Concordance sexe": "Concordance de sexe réduit le risque de GvHD.",
                     "ABO donneur":      "Groupe sanguin du donneur.",
                     "ABO receveur":     "Groupe sanguin du receveur.",
                     "Compat. ABO":      "Incompatibilité ABO → risque de réaction hémolytique.",
                     "CMV combiné":      "Combinaison des statuts CMV donneur et receveur.",
-                    "CMV donneur":      "CMV donneur+ / receveur− = risque de réactivation élevé.",
+                    "CMV donneur":      "CMV donneur+ / receveur− = risque élevé.",
                     "CMV receveur":     "Détermine le risque de réactivation CMV post-greffe.",
                     "Maladie":          "La pathologie détermine le protocole et le pronostic.",
+                    "Maladie AML":      "Leucémie myéloïde aiguë.",
+                    "Maladie chronique":"Leucémie myéloïde chronique.",
+                    "Lymphome":         "Lymphome — pronostic variable.",
+                    "Non-malin":        "Maladie non-maligne — meilleur pronostic global.",
                     "Risque":           "Classification du risque au moment de la greffe.",
                     "Post-rechute":     "Greffe après rechute — pronostic plus réservé.",
                     "Groupe maladie":   "Maladie maligne vs non-maligne.",
                     "HLA match":        "10/10 = prédicteur fort de succès.",
-                    "HLA diff.":        "Nombre d'antigènes HLA incompatibles.",
+                    "HLA diff.":        "Antigènes HLA incompatibles.",
                     "Antigènes":        "Antigènes HLA incompatibles entre donneur et receveur.",
-                    "Allèles":          "Allèles HLA incompatibles — corrélé au risque de rejet.",
+                    "Allèles":          "Allèles HLA incompatibles.",
                     "Score HLA":        "Score global de compatibilité HLA.",
                     "Âge receveur":     "Influence la tolérance au conditionnement.",
                     "< 10 ans":         "Receveur pédiatrique critique.",
                     "Tranche âge":      "Catégorie d'âge du receveur.",
                     "CD34+/kg":         "Variable #1 selon la littérature : doses élevées prolongent la survie.",
+                    "Ratio CD3/CD34":   "Rapport entre lymphocytes T et cellules souches.",
+                    "CD3+/kg":          "Dose de lymphocytes T — impact sur GvHD et GvL.",
                     "Poids":            "Détermine les doses de chimiothérapie et le ratio cellules / kg.",
                 }
 

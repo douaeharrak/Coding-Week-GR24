@@ -186,7 +186,10 @@ def balance_classes(X, y):
     print('Distribution avant SMOTE :')
     print(f'   {pd.Series(y).value_counts().to_dict()}')
 
-    smote = SMOTE(random_state=42)
+    min_samples = pd.Series(y).value_counts().min()
+    k = min(5, min_samples - 1)  # adapte k_neighbors automatiquement
+
+    smote = SMOTE(random_state=42, k_neighbors=k)
     X_resampled, y_resampled = smote.fit_resample(X, y)
 
     print('Distribution après SMOTE :')

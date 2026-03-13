@@ -183,7 +183,7 @@ class TestEncodeFeatures:
         n_disease_cols = len([c for c in df_result.columns if c.startswith('disease_')])
         n_blood_cols = len([c for c in df_result.columns if c.startswith('blood_type_')])
         
-        assert n_disease_cols == 3  # 4 catégories - 1
+        assert n_disease_cols == 2  # 3 catégories - 1
         assert n_blood_cols == 3    # 4 catégories - 1
     
     def test_mixed_encoding(self):
@@ -239,8 +239,8 @@ class TestScaleFeatures:
         assert abs(df_scaled['blood_pressure'].mean()) < 1e-10
         
         # Vérifier que l'écart-type est ~1
-        assert abs(df_scaled['age'].std() - 1) < 1e-10
-        assert abs(df_scaled['blood_pressure'].std() - 1) < 1e-10
+        assert abs(df_scaled['age'].std(ddof=0) - 1) < 1e-10
+        assert abs(df_scaled['blood_pressure'].std(ddof=0) - 1) < 1e-10
         
         # Vérifier que la target n'a pas été scalée
         assert df_scaled['survival_status'].tolist() == df_test['survival_status'].tolist()

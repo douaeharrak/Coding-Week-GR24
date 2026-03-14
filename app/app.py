@@ -143,6 +143,18 @@ div.stButton > button:hover { opacity:0.88; }
     background:#eff6ff; border-left:3px solid #93c5fd; border-radius:4px;
     padding:0.6rem 0.8rem; font-size:0.74rem; color:#1e40af; line-height:1.6; margin-top:0.8rem;
 }
+/* Curseur main sur les selectbox et inputs */
+div[data-baseweb="select"] { cursor: pointer !important; }
+div[data-baseweb="select"] * { cursor: pointer !important; }
+div[data-baseweb="input"] { cursor: text !important; }
+.stNumberInput button { cursor: pointer !important; }
+/* Inline error style */
+.field-error {
+    color: #dc2626; font-size: 0.78rem; margin-top: 2px;
+    padding: 2px 6px; border-radius: 4px;
+    background: #fef2f2; border: 1px solid #fecaca;
+    display: inline-block; margin-bottom: 4px;
+}
 </style>
 """, unsafe_allow_html=True)
 
@@ -161,6 +173,15 @@ st.markdown("<div style='margin-top:1rem'></div>", unsafe_allow_html=True)
 st.markdown('<p class="form-title">📋 Données Cliniques du Dossier</p>', unsafe_allow_html=True)
 st.markdown('<p class="form-subtitle">Renseignez toutes les informations disponibles pour obtenir la prédiction</p>', unsafe_allow_html=True)
 
+# Session state pour erreurs inline
+if "field_errors" not in st.session_state:
+    st.session_state.field_errors = {}
+
+def ferr(key):
+    e = st.session_state.field_errors.get(key)
+    if e:
+        st.markdown(f'<div style="color:#dc2626;font-size:0.78rem;margin-top:-8px;margin-bottom:6px;padding:3px 8px;background:#fef2f2;border-radius:4px;border:1px solid #fecaca">⚠️ {e}</div>', unsafe_allow_html=True)
+
 with st.form("patient_data"):
 
     st.markdown('<p class="section-title">👤 Receveur (Patient)</p>', unsafe_allow_html=True)
@@ -171,15 +192,15 @@ with st.form("patient_data"):
         Recipientgender = st.selectbox("Sexe du receveur", [1, 0],
                                        format_func=lambda x: "Masculin" if x == 1 else "Féminin")
     with c3:
-        Rbodymass_str = st.text_input("Poids du receveur (kg)", value="30",
-                                      help="Ex : 28.5")
+        Rbodymass_str = st.text_input("Poids du receveur (kg)", value="30")
+        ferr("poids")
 
     c4, c5, c6 = st.columns(3, gap="medium")
     with c4:
         RecipientABO = st.selectbox("Groupe sanguin receveur", [0, 1, 2, 3],
                                     format_func=lambda x: ["0","A","B","AB"][x])
     with c5:
-        RecipientCMV = st.selectbox("CMV receveur", [0, 1],
+        RecipientCMV = st.selectbox("CMV receveur (Cytomégalovirus)", [0, 1],
                                     format_func=lambda x: "Absent" if x == 0 else "Présent")
     with c6:
         Recipientage10 = st.selectbox("Receveur < 10 ans ?", [0, 1],
@@ -188,25 +209,24 @@ with st.form("patient_data"):
     st.markdown('<p class="section-title">🧬 Donneur</p>', unsafe_allow_html=True)
     d1, d2, d3 = st.columns(3, gap="medium")
     with d1:
-        Donorage_str = st.text_input("Âge du donneur (années)", value="30",
-                                     help="Un donneur < 35 ans est un facteur favorable")
+        Donorage_str = st.text_input("Âge du donneur (années)", value="30")
+        ferr("donorage")
     with d2:
         DonorABO = st.selectbox("Groupe sanguin donneur", [0, 1, 2, 3],
                                 format_func=lambda x: ["0","A","B","AB"][x])
     with d3:
-        DonorCMV = st.selectbox("CMV donneur", [0, 1],
+        DonorCMV = st.selectbox("CMV donneur (Cytomégalovirus)", [0, 1],
                                 format_func=lambda x: "Absent" if x == 0 else "Présent")
 
     st.markdown('<p class="section-title">🔬 Compatibilité Immunologique</p>', unsafe_allow_html=True)
     i1, i2, i3 = st.columns(3, gap="medium")
     with i1:
-        HLAmatch = st.selectbox("Compatibilité HLA", [10, 9, 8, 7],
-                                format_func=lambda x: f"{x}/10",
-                                help="10/10 = compatibilité parfaite")
+        HLAmatch = st.selectbox("Compatibilité HLA (antigènes leucocytaires)", [10, 9, 8, 7],
+                                format_func=lambda x: f"{x}/10")
     with i2:
         HLAmismatch = st.number_input("Antigènes HLA différents", min_value=0, max_value=3, value=0, step=1)
     with i3:
-        ABOmatch = st.selectbox("Compatibilité ABO", [1, 0],
+        ABOmatch = st.selectbox("Compatibilité ABO (groupe sanguin)", [1, 0],
                                 format_func=lambda x: "Compatible" if x == 1 else "Incompatible")
 
     i4, i5, i6 = st.columns(3, gap="medium")
@@ -233,80 +253,81 @@ with st.form("patient_data"):
 
     p4, p5, p6 = st.columns(3, gap="medium")
     with p4:
-        Txpostrelapse = st.selectbox("Greffe post-rechute ?", [0, 1],
+        Txpostrelapse = st.selectbox("Greffe après rechute de la maladie ?", [0, 1],
                                      format_func=lambda x: "Non" if x == 0 else "Oui")
     with p5:
         Diseasegroup = st.selectbox("Groupe maladie", [0, 1],
                                     format_func=lambda x: "Non-maligne" if x == 0 else "Maligne")
     with p6:
-        IIIV = st.selectbox("Stade maladie avancé (II-IV)", [0, 1],
+        IIIV = st.selectbox("Stade avancé de la maladie (II à IV)", [0, 1],
                             format_func=lambda x: "Non" if x == 0 else "Oui")
 
     p7, = st.columns(1)
     with p7:
-        CMVstatus = st.selectbox("Statut CMV combiné", [0, 1, 2, 3],
-                                 format_func=lambda x: ["−/−","−/+","+/−","+/+"][x],
-                                 help="Statut CMV donneur / receveur")
+        CMVstatus = st.selectbox("Statut CMV combiné (donneur/receveur)", [0, 1, 2, 3],
+                                 format_func=lambda x: ["−/−","−/+","+/−","+/+"][x])
 
     st.markdown('<p class="section-title">💉 Données de la Greffe</p>', unsafe_allow_html=True)
     g1, g2, g3 = st.columns(3, gap="medium")
     with g1:
-        CD34_str = st.text_input("Dose CD34+ (×10⁶/kg)", value="3.0",
-                                 help="Variable #1 selon la littérature. Ex : 3.5")
+        CD34_str = st.text_input("Dose CD34+ (cellules souches, ×10⁶/kg)", value="3.0")
+        ferr("cd34")
     with g2:
-        CD3dCD34_str = st.text_input("Ratio CD3/CD34", value="1.0",
-                                     help="Rapport CD3d/CD34. Ex : 1.0")
+        CD3dCD34_str = st.text_input("Ratio CD3/CD34", value="1.0")
+        ferr("cd3dcd34")
     with g3:
-        CD3dkgx10d8_str = st.text_input("CD3+ (×10⁸/kg)", value="2.0",
-                                        help="Dose de lymphocytes T CD3+. Ex : 2.0")
+        CD3dkgx10d8_str = st.text_input("CD3+ (×10⁸/kg)", value="2.0")
+        ferr("cd3dkgx10d8")
 
     st.markdown("<div style='margin-top:0.6rem'></div>", unsafe_allow_html=True)
     submit = st.form_submit_button("⚡ Calculer la probabilité de succès")
 
 if submit:
 
-    errors = []
+    # ── Validation avec erreurs inline via session_state ──
+    st.session_state.field_errors = {}
+    Rbodymass    = None
+    Donorage     = None
+    CD34kgx10d6  = None
+    CD3dCD34     = None
+    CD3dkgx10d8  = None
 
     try:
         Rbodymass = float(str(Rbodymass_str).replace(",", ".").strip())
         if not (3.0 <= Rbodymass <= 150.0):
-            errors.append("Poids du receveur hors plage — attendu entre 3 et 150 kg.")
+            st.session_state.field_errors["poids"] = "Valeur invalide — entrez un nombre entre 3 et 150 kg"
+            Rbodymass = None
     except ValueError:
-        errors.append(f"Poids invalide : « {Rbodymass_str} » — entrez un nombre, ex : 28.5")
-        Rbodymass = None
+        st.session_state.field_errors["poids"] = f"Valeur invalide — entrez un nombre entre 3 et 150 (ex : 28.5)"
 
     try:
         Donorage = float(str(Donorage_str).replace(",", ".").strip())
         if not (18 <= Donorage <= 70):
-            errors.append("Âge du donneur hors plage — attendu entre 18 et 70 ans.")
+            st.session_state.field_errors["donorage"] = "Valeur invalide — entrez un nombre entre 18 et 70 ans"
+            Donorage = None
     except ValueError:
-        errors.append(f"Âge donneur invalide : « {Donorage_str} » — entrez un nombre entier.")
-        Donorage = None
+        st.session_state.field_errors["donorage"] = f"Valeur invalide — entrez un nombre entre 18 et 70 (ex : 30)"
 
     try:
         CD34kgx10d6 = float(str(CD34_str).replace(",", ".").strip())
         if not (0.1 <= CD34kgx10d6 <= 30.0):
-            errors.append("Dose CD34+ hors plage — attendu entre 0.1 et 30.")
+            st.session_state.field_errors["cd34"] = "Valeur invalide — entrez un nombre entre 0.1 et 30"
+            CD34kgx10d6 = None
     except ValueError:
-        errors.append(f"Dose CD34+ invalide : « {CD34_str} » — entrez un nombre, ex : 3.5")
-        CD34kgx10d6 = None
+        st.session_state.field_errors["cd34"] = f"Valeur invalide — entrez un nombre entre 0.1 et 30 (ex : 3.5)"
 
     try:
         CD3dCD34 = float(str(CD3dCD34_str).replace(",", ".").strip())
     except ValueError:
-        errors.append(f"Ratio CD3/CD34 invalide : « {CD3dCD34_str} » — entrez un nombre, ex : 1.0")
-        CD3dCD34 = None
+        st.session_state.field_errors["cd3dcd34"] = f"Valeur invalide — entrez un nombre décimal (ex : 1.0)"
 
     try:
         CD3dkgx10d8 = float(str(CD3dkgx10d8_str).replace(",", ".").strip())
     except ValueError:
-        errors.append(f"CD3+ invalide : « {CD3dkgx10d8_str} » — entrez un nombre, ex : 2.0")
-        CD3dkgx10d8 = None
+        st.session_state.field_errors["cd3dkgx10d8"] = f"Valeur invalide — entrez un nombre décimal (ex : 2.0)"
 
-    if errors:
-        for err in errors:
-            st.markdown(f'<div class="warning-box">⚠️ {err}</div>', unsafe_allow_html=True)
-        st.stop()
+    if st.session_state.field_errors:
+        st.rerun()
 
     warnings_list = []
     if Recipientage < 10:
@@ -555,6 +576,13 @@ if submit:
                 plt.tight_layout(pad=1.0)
                 st.pyplot(fig)
                 plt.close(fig)
+                st.markdown("""
+                <div class="shap-note" style="margin-top:0.5rem">
+                  <strong>Comment lire ?</strong><br>
+                  Barre <strong style="color:#6096e0">bleue</strong> = ce facteur <em>augmente</em> la probabilité de succès.<br>
+                  Barre <strong style="color:#e07070">rouge</strong> = ce facteur la <em>diminue</em>.
+                </div>
+                """, unsafe_allow_html=True)
 
             with col_legend:
                 desc_map = {
@@ -611,17 +639,10 @@ if submit:
                     </div>
                     """, unsafe_allow_html=True)
 
-                st.markdown("""
-                <div class="shap-note">
-                  <strong>Comment lire ?</strong><br>
-                  Barre <strong style="color:#6096e0">bleue</strong> = ce facteur
-                  <em>augmente</em> la probabilité de succès.
-                  Barre <strong style="color:#e07070">rouge</strong> = il la <em>diminue</em>.
-                  Seuls les 8 facteurs les plus influents sont affichés.
-                </div>
-                """, unsafe_allow_html=True)
 
             st.markdown("</div>", unsafe_allow_html=True)
+
+
 
     except Exception as e:
         st.error(f"Erreur lors du traitement : {e}")

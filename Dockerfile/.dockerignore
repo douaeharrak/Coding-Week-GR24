@@ -1,0 +1,112 @@
+# FICHIERS ET DOSSIERS À EXCLURE DE L'IMAGE
+
+# Git
+.git
+.gitignore
+.github
+.gitattributes
+
+# Python (indépendant de la version)
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+ENV/
+env.bak/
+venv.bak/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+.coverage.*
+*.cover
+htmlcov/
+.tox/
+.mypy_cache/
+.dmypy.json
+dmypy.json
+*.pyc
+*.pyo
+*.pyd
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# Données (trop volumineuses)
+data/raw/
+data/processed/
+data/interim/
+data/external/
+*.csv
+*.xlsx
+*.parquet
+*.arff
+*.db
+*.sqlite3
+
+# Notebooks
+notebooks/
+*.ipynb
+*.ipynb_checkpoints/
+.jupyter/
+
+# Logs
+*.log
+logs/
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose*.yml
+
+# Tests (pas dans l'image finale)
+tests/
+test_*.py
+*.test.py
+
+# Documentation
+README.md
+*.pdf
+*.md
+docs/
+doc/
+
+# Cache
+.cache/
+*.cache
+.cache/
+
+# Modèles (si vous voulez les exclure)
+models/
+*.pkl
+*.joblib
+*.h5
+*.pt
+
+# Environnement
+.env
+.env.*
+.flaskenv
+
+# Archives
+*.zip
+*.tar
+*.gz
+*.rar
+
+# Fichiers temporaires
+tmp/
+temp/
+*.tmp
+*.temp

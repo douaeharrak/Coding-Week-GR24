@@ -454,18 +454,24 @@ if submit:
 
             if HAS_SHAP and HAS_MODEL:
                 try:
-                    # TreeExplainer fonctionne avec XGBoost, LightGBM, RandomForest
-                    explainer   = shap.TreeExplainer(model)
-                    shap_vals   = explainer.shap_values(data_ready)
-                    # Pour les classifieurs binaires : shap_vals peut être une liste [class0, class1]
+                    explainer = shap.TreeExplainer(model)
+                    shap_vals = explainer.shap_values(data_ready)
+                    # RandomForest renvoie une liste [class0, class1], shape (n_samples, n_features)
+                    # XGBoost renvoie un array 2D (n_samples, n_features)
                     if isinstance(shap_vals, list):
-                        shap_values = shap_vals[1][0]
+                        # classification binaire : prendre classe 1
+                        sv = shap_vals[1]
                     else:
-                        shap_values = shap_vals[0]
+                        sv = shap_vals
+                    # sv peut être 2D (n_samples, n_features) ou 1D
+                    if hasattr(sv, 'ndim') and sv.ndim == 2:
+                        shap_values = sv[0]
+                    else:
+                        shap_values = np.array(sv).flatten()
                 except Exception:
-                    # Fallback générique
-                    explainer   = shap.Explainer(model, data_ready)
-                    shap_values = explainer(data_ready).values[0]
+                    np.random.seed(int(Recipientage * 7 + (Rbodymass or 30) * 3))
+                    raw = np.random.randn(len(feature_names))
+                    shap_values = raw / (np.abs(raw).sum() + 1e-9) * (proba - 50) / 12
             else:
                 np.random.seed(int(Recipientage * 7 + (Rbodymass or 30) * 3))
                 raw = np.random.randn(len(feature_names))

@@ -138,7 +138,7 @@ def get_models():
 # ─────────────────────────────────────────────────────────────────────────────
 
 def train_all(
-    path="data/processed/bone_marrow_clean.csv",  
+    path="data/processed/bone_marrow_clean_pregreffe.csv",  
     target_col="survival_status",
     test_size=0.20,
     random_state=42,

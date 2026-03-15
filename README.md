@@ -35,28 +35,38 @@ L'application s'appuie sur des modèles de Machine Learning entraînés sur un d
 Coding-Week-GR24/
 │
 ├── .github/
-│   └── workflows/                  # Pipeline CI/CD GitHub Actions
+│   └── workflows/
+│       ├── cd.yml
+│       ├── lint.yml
+│       ├── main.yml
+│       └── streamlit.yml
+│
+├── Notebooks/
+│   └── Edaa.ipynb
 │
 ├── app/
-│   └── app.py                      # Application Streamlit
+│   └── app.py
 │
 ├── data/
-│   ├── raw/                        # Données brutes (bone-marrow.arff)
-│   └── processed/                  # Données nettoyées
+│   ├── raw/
+│   │   └── bone-marrow.arff
+│   └── processed/
 │       ├── bone_marrow_clean.csv
 │       └── bone_marrow_clean_pregreffe.csv
 │
 ├── models/                         # Modèles entraînés (.pkl)
-│   ├── xgboost_model.pkl
+│   ├── best_model.pkl
 │   ├── lightgbm_model.pkl
+│   ├── lightgbm_pipeline.pkl
 │   ├── randomforest_model.pkl
+│   ├── randomforest_pipeline.pkl
+│   ├── scaler.pkl
 │   ├── svm_model.pkl
-│   └── scaler.pkl
+│   ├── svm_pipeline.pkl
+│   ├── xgboost_model.pkl
+│   └── xgboost_pipeline.pkl
 │
-├── Notebooks/
-│   └── Edaa.ipynb                  # Analyse exploratoire des données
-│
-├── outputs/                        # Résultats et visualisations
+├── outputs/
 │   ├── comparaison_metriques.png
 │   ├── confusion_matrices.png
 │   ├── cv_auc_comparison.png
@@ -67,20 +77,18 @@ Coding-Week-GR24/
 │   ├── rapport_greffe.html
 │   └── roc_curves.png
 │
-├── README/
-│   └── README.md
-│
 ├── src/
-│   ├── data_processing.py          # Pipeline de traitement des données
-│   ├── evaluate_model.py           # Évaluation des modèles
-│   └── train_model.py              # Entraînement des modèles
+│   ├── data_processing.py
+│   ├── evaluate_model.py
+│   └── train_model.py
 │
 ├── tests/
 │   ├── __init__.py
-│   └── test_data_processing.py     # Tests unitaires
+│   └── test_data_processing.py
 │
 ├── .gitignore
-└── requirements.txt
+├── requirements.txt
+└── README.md
 ```
 
 ---

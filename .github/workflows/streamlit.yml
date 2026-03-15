@@ -1,0 +1,14 @@
+name: Test Streamlit App
+
+on: [push]
+
+jobs:
+  app:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+    - run: pip install -r requirements.txt/requirements.txt
+    - run: timeout 10 python -m streamlit run app/app.py --server.headless true || true

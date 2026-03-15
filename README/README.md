@@ -66,8 +66,6 @@ pytest tests/ -v
 
 Coding-Week-GR24/
 ├── 📁 .github/
-│   └── 📁 workflows/
-│       └── 📄 ci.yml                 # CI/CD avec GitHub Actions
 ├── 📁 src/
 │   ├── 📄 data_processing.py          # Prétraitement des données
 │   ├── 📄 train_model.py              # Entraînement des modèles
@@ -90,9 +88,56 @@ Coding-Week-GR24/
 
 # Discussion
 
-1) le dataset est-il équilibré ? 
-Non, déséquilibre modéré (60/40)
+- Déséquilibre modéré (60/40)
 Solution : SMOTE avec random_state=42
 Impact : Amélioration du recall pour la classe minoritaire
 
-2) Quel modèle à donné les meilleurs résultats ? 
+- Le modèle ML avec les meilleurs résultats est XGBoost. 
+Indicateurs de performance :
+
+ROC-AUC : 0.900 (Excellente capacité à distinguer les survivants des non-survivants)
+Précision : 0.933 (93.3% des patients prédits à risque le sont réellement)
+Rappel : 0.737 (73.7% des patients à risque sont correctement identifiés)
+F1-Score : 0.828 (Excellent équilibre entre précision et rappel )
+
+Sur le plan médical, ces résultats signifient que dans un contexte clinique :
+. Le modèle identifie correctement **9 patients à risque sur 10**
+. **Moins de 7% des alertes sont fausses**, évitant un stress inutile
+. La décision médicale peut s'appuyer sur une prédiction fiable
+
+# Prompt engineering
+
+**tache sélectionnée** : Création des tests pytest pour les fonctions de preprocessing (test_data_processing.py)
+
+- promp initial utilisé : 
+"Génère des tests pytest pour les fonctions handle_missing_values, 
+balance_classes et handle_outliers en Python. Inclus la gestion 
+des cas normaux, des cas limites et des erreurs."
+
+- ce que l'IA m'a fourni : 
+Une structure de base pour les tests
+Des exemples de DataFrames synthétiques
+Des assertions pour vérifier les résultats
+La gestion des cas d'erreur (edge cases)
+
+- améliorations apportées
+J'ai dû adapter le code généré pour qu'il corresponde exactement aux fonctions de mon camarade :
+Adapter les noms de paramètres
+Ajouter des tests spécifiques pour le SMOTE
+Vérifier que la target n'est pas modifiée par le scaling
+Tester le retour du scaler
+
+- ce que j'ai appris : 
+Plus le prompt est détaillé, plus la réponse est utile. Ajouter "avec pandas DataFrame" ou "pour du code médical" améliore considérablement les résultats.
+Le premier résultat n'est jamais parfait. Il faut reformuler, préciser, demander des ajustements.
+L'IA peut générer du code qui semble correct mais qui ne correspond pas exactement à nos fonctions. Chaque ligne doit être testée et adaptée.
+L'IA m'a fourni une base solide que j'ai ensuite personnalisée pour notre projet spécifique, gagnant ainsi un temps précieux.
+
+# Equipe 
+
+HARRAK Douae
+GUIMBONE Daouda
+HASSAR Nada 
+WANDAOGO Zénabou 
+DIONE Amina 
+  

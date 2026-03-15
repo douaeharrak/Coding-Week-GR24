@@ -1,6 +1,5 @@
 # DEPENDANCES PRINCIPALES - PROJET GREFFE MOELLE OSSEUSE
 # Version Python requise : 3.13.7
-python_requires>=3.13.7
 
 # Manipulation des données
 numpy>=1.21.0

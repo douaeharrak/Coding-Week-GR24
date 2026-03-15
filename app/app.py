@@ -865,3 +865,10 @@ if submit:
     except Exception as e:
         st.error(f"Erreur lors du traitement : {e}")
         st.exception(e)
+
+st.markdown("""
+<div style="...">
+⚕️ Cet outil est une aide à la décision clinique uniquement. 
+Il ne remplace pas l'avis d'un professionnel de santé.
+</div>
+""", unsafe_allow_html=True)

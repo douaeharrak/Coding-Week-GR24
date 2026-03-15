@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit.components.v1 as components
 import pandas as pd
 import numpy as np
 import os
@@ -68,271 +69,506 @@ st.set_page_config(
     initial_sidebar_state="collapsed",
 )
 
+# ── CSS : mise en forme du document 1 (original) ──
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display&display=swap');
-html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&family=Playfair+Display:wght@600;700&display=swap');
+
+html, body, [class*="css"] { font-family: 'Nunito', sans-serif; font-weight: 600; }
+
+.stApp {
+    background: linear-gradient(160deg, #dbeafe 0%, #eff6ff 40%, #e0f2fe 100%);
+    min-height: 100vh;
+}
 
 .main-header {
-    background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-    border: 1px solid #e2e8f0; border-radius: 16px;
-    padding: 1.8rem 2.5rem; margin-bottom: 1.4rem;
-    display: flex; align-items: center; gap: 1.2rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%);
+    border-radius: 22px;
+    padding: 2rem 2.8rem;
+    margin-bottom: 2rem;
+    display: flex; align-items: center; gap: 1.6rem;
+    box-shadow: 0 12px 40px rgba(15,42,74,0.3);
+    position: relative; overflow: hidden;
 }
-.main-header h1 { font-family:'DM Serif Display',serif; font-size:1.9rem; margin:0; color:#0f172a; }
-.main-header p  { margin:0.3rem 0 0; color:#64748b; font-size:0.88rem; font-weight:300; }
-.header-accent  { width:5px; height:60px; border-radius:4px;
-                  background:linear-gradient(180deg,#60a5fa,#818cf8); flex-shrink:0; }
+.main-header::before {
+    content: '';
+    position: absolute; top:-60px; right:-60px;
+    width:220px; height:220px; border-radius:50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.15) 0%, transparent 70%);
+}
+.main-header::after {
+    content: '';
+    position: absolute; bottom:-40px; left:200px;
+    width:150px; height:150px; border-radius:50%;
+    background: radial-gradient(circle, rgba(167,139,250,0.12) 0%, transparent 70%);
+}
+.main-header h1 {
+    font-family:'Playfair Display',serif;
+    font-size:2rem; margin:0; font-weight:700;
+    color:#ffffff; letter-spacing:-0.01em;
+    text-shadow: 0 2px 16px rgba(0,0,0,0.2), 0 0 40px rgba(255,255,255,0.15);
+}
+.main-header p {
+    margin:0.4rem 0 0; color:rgba(255,255,255,0.65);
+    font-size:0.85rem; font-weight:600;
+    letter-spacing:0.06em; text-transform:uppercase;
+}
+.header-accent {
+    width:5px; height:70px; border-radius:6px; flex-shrink:0;
+    background: linear-gradient(180deg, #38bdf8 0%, #818cf8 50%, #f472b6 100%);
+    box-shadow: 0 0 16px rgba(56,189,248,0.6);
+}
+.header-icon { font-size:3rem; filter: drop-shadow(0 4px 10px rgba(56,189,248,0.5)); }
 
-.section-title {
-    font-family:'DM Serif Display',serif; font-size:1.0rem; color:#334155;
-    margin:1.4rem 0 0.6rem 0; padding-bottom:0.4rem; border-bottom:1.5px solid #e2e8f0;
+div[data-baseweb="input"] input,
+div[data-testid="stNumberInput"] input {
+    background: #ffffff !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    color: #0f2a4a !important;
+    font-family: 'Nunito', sans-serif !important;
+    font-weight: 700 !important;
+    font-size: 0.95rem !important;
+    transition: border-color 0.2s, box-shadow 0.2s !important;
 }
-div[data-testid="stForm"] {
-    border:none !important; box-shadow:none !important;
-    padding:0 !important; background:transparent !important;
+div[data-baseweb="input"] input:focus {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
 }
-.form-title    { text-align:center; font-family:'DM Serif Display',serif;
-                 font-size:1.2rem; color:#1e1b4b; margin-bottom:0.1rem; font-weight:600; }
-.form-subtitle { text-align:center; font-size:0.8rem; color:#818cf8; margin-bottom:1.2rem; }
+div[data-baseweb="select"] > div {
+    background: #ffffff !important;
+    border: 2px solid #e2e8f0 !important;
+    border-radius: 10px !important;
+    color: #0f2a4a !important;
+    font-family: 'Nunito', sans-serif !important;
+    font-weight: 700 !important;
+}
+div[data-baseweb="select"] > div:focus-within {
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 3px rgba(59,130,246,0.15) !important;
+}
+div[data-baseweb="select"] * { cursor: pointer !important; }
+label[data-testid="stWidgetLabel"] p,
+div[data-testid="stNumberInput"] label p {
+    color: #1e40af !important;
+    font-size: 0.78rem !important;
+    font-weight: 800 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.07em !important;
+}
+div[data-testid="stNumberInput"] button {
+    background: #f1f5f9 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 6px !important;
+    box-shadow: none !important;
+    color: #475569 !important;
+    padding: 2px 6px !important;
+    cursor: pointer !important;
+    font-size: 1rem !important;
+}
+div[data-testid="stNumberInput"] button:hover {
+    background: #dbeafe !important;
+    border-color: #93c5fd !important;
+    color: #1e40af !important;
+}
+div[data-testid="stNumberInput"] button svg { fill: currentColor !important; }
 
 div.stButton > button {
-    background:linear-gradient(135deg,#60a5fa,#818cf8); color:white;
-    border:none; border-radius:10px; padding:0.65rem 2rem;
-    font-size:0.95rem; font-weight:600; font-family:'DM Sans',sans-serif;
-    transition:opacity 0.2s; width:100%;
+    background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 50%, #93c5fd 100%) !important;
+    color: #1e3a5f !important;
+    border: 1.5px solid #bfdbfe !important;
+    outline: none !important;
+    border-radius: 14px !important;
+    padding: 1.05rem 2rem !important;
+    font-size: 1.25rem !important;
+    font-weight: 900 !important;
+    font-family: 'Playfair Display', serif !important;
+    width: 100% !important;
+    letter-spacing: 0.02em !important;
+    box-shadow: 0 6px 24px rgba(59,130,246,0.4), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+    transition: all 0.2s !important;
+    margin-top: 1rem !important;
 }
-div.stButton > button:hover { opacity:0.88; }
+div.stButton > button:hover {
+    transform: translateY(-2px) !important;
+    background: linear-gradient(135deg, #2563eb 0%, #3b82f6 50%, #60a5fa 100%) !important;
+    box-shadow: 0 10px 32px rgba(59,130,246,0.55), inset 0 1px 0 rgba(255,255,255,0.3) !important;
+    color: #ffffff !important;
+}
 
 .warning-box {
-    background:#fff7ed; border:1px solid #fed7aa; border-radius:10px;
-    padding:0.8rem 1.2rem; margin-bottom:0.8rem; font-size:0.83rem; color:#9a3412;
+    background: linear-gradient(135deg, #fef9ec, #fff8e1);
+    border: 2px solid #f59e0b;
+    border-left: 5px solid #d97706;
+    border-radius: 12px;
+    padding: 0.9rem 1.3rem;
+    margin-bottom: 0.9rem;
+    font-size: 0.84rem;
+    color: #78350f;
+    font-weight: 700;
+    box-shadow: 0 2px 10px rgba(245,158,11,0.15);
 }
-.result-card   { border-radius:14px; padding:1.5rem 2rem; margin-top:1rem; text-align:center; }
-.result-high   { background:#f0fdf4; border:2px solid #22c55e; }
-.result-medium { background:#fffbeb; border:2px solid #f59e0b; }
-.result-low    { background:#fff1f2; border:2px solid #f43f5e; }
-.result-score  { font-family:'DM Serif Display',serif; font-size:3.5rem; font-weight:700; margin:0; }
+
+.result-card { border-radius: 20px; padding: 2.2rem 2.5rem; margin-top: 1.2rem; text-align: center; }
+.result-high   { background: linear-gradient(135deg, #f0fdf4, #dcfce7); border-left: 6px solid #22c55e; box-shadow: 0 8px 30px rgba(34,197,94,0.12); border-radius: 20px; }
+.result-medium { background: linear-gradient(135deg, #fffbeb, #fef3c7); border-left: 6px solid #f59e0b; box-shadow: 0 8px 30px rgba(245,158,11,0.12); border-radius: 20px; }
+.result-low    { background: linear-gradient(135deg, #fff1f2, #ffe4e6); border-left: 6px solid #ef4444; box-shadow: 0 8px 30px rgba(244,63,94,0.12); border-radius: 20px; }
+.result-score  { font-family:'Playfair Display',serif; font-size:5rem; font-weight:700; margin:0; line-height:1; }
 .score-high    { color:#16a34a; }
 .score-medium  { color:#d97706; }
-.score-low     { color:#e11d48; }
-.result-label  { font-size:1rem; font-weight:500; color:#64748b; margin-bottom:0.5rem; }
-.result-interp { margin-top:0.8rem; font-size:0.93rem; color:#475569; line-height:1.7; }
+.score-low     { color:#dc2626; }
+.result-label  { font-size:0.8rem; font-weight:800; color:#64748b; margin-bottom:0.6rem; text-transform:uppercase; letter-spacing:0.12em; }
+.result-interp { margin-top:0.9rem; font-size:0.93rem; color:#374151; line-height:1.7; font-weight:600; }
 
 .pipeline-box {
-    background:#f0f7ff; border:1px solid #bfdbfe; border-radius:10px;
-    padding:0.9rem 1.2rem; margin-top:1rem; font-size:0.82rem; color:#1e40af; line-height:1.8;
+    background: #f0f7ff; border: 1.5px solid #bfdbfe; border-left: 5px solid #3b82f6;
+    border-radius: 12px; padding: 0.9rem 1.3rem; margin-top: 1rem;
+    font-size: 0.79rem; color: #1e40af; line-height: 2;
+    font-family: 'Courier New', monospace; font-weight: 700;
 }
-.pipeline-box strong { color:#1d4ed8; }
+.pipeline-box strong { color: #1d4ed8; font-family: 'Nunito', sans-serif; font-weight:800; }
 
-.shap-card {
-    background:#f8fafc; border:1px solid #e2e8f0;
-    border-radius:14px; padding:1.4rem 1.8rem; margin-top:1rem;
-}
-.shap-title        { font-family:'DM Serif Display',serif; font-size:1.2rem; color:#0f172a; margin-bottom:0.2rem; }
-.shap-subtitle     { font-size:0.82rem; color:#94a3b8; margin-bottom:0.8rem; }
-.shap-legend-title { font-size:0.85rem; font-weight:600; color:#334155; margin-bottom:0.8rem; }
-.shap-item     { display:flex; align-items:flex-start; gap:10px; margin-bottom:0.9rem; }
-.shap-dot      { width:11px; height:11px; border-radius:50%; flex-shrink:0; margin-top:3px; }
-.shap-dot-pos  { background:#6096e0; }
-.shap-dot-neg  { background:#e07070; }
-.shap-item-label { font-size:0.78rem; font-weight:600; color:#334155; }
-.shap-item-desc  { font-size:0.74rem; color:#64748b; line-height:1.5; margin-top:2px; }
+.shap-card { background: #ffffff; border: 1.5px solid #e0e8f8; border-radius: 18px; padding: 1.6rem 1.8rem; margin-top: 1rem; box-shadow: 0 4px 20px rgba(15,42,74,0.07); }
+.shap-title    { font-family:'Playfair Display',serif; font-size:1.3rem; color:#0f2a4a; margin-bottom:0.2rem; font-weight:700; }
+.shap-subtitle { font-size:0.82rem; color:#64748b; margin-bottom:0.8rem; font-weight:600; font-style:italic; }
+.shap-legend-title { font-size:0.8rem; font-weight:800; color:#1e40af; margin-bottom:0.8rem; text-transform:uppercase; letter-spacing:0.08em; }
+.shap-item     { display:flex; align-items:flex-start; gap:10px; margin-bottom:0.85rem; }
+.shap-dot      { width:11px; height:11px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+.shap-dot-pos  { background:#3b82f6; box-shadow: 0 0 6px rgba(59,130,246,0.5); }
+.shap-dot-neg  { background:#ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.5); }
+.shap-item-label { font-size:0.79rem; font-weight:800; color:#0f2a4a; }
+.shap-item-desc  { font-size:0.73rem; color:#64748b; line-height:1.5; margin-top:2px; font-weight:600; }
 .shap-note {
-    background:#eff6ff; border-left:3px solid #93c5fd; border-radius:4px;
-    padding:0.6rem 0.8rem; font-size:0.74rem; color:#1e40af; line-height:1.6; margin-top:0.8rem;
-}
-/* Curseur main sur les selectbox et inputs */
-div[data-baseweb="select"] { cursor: pointer !important; }
-div[data-baseweb="select"] * { cursor: pointer !important; }
-div[data-baseweb="input"] { cursor: text !important; }
-.stNumberInput button { cursor: pointer !important; }
-/* Inline error style */
-.field-error {
-    color: #dc2626; font-size: 0.78rem; margin-top: 2px;
-    padding: 2px 6px; border-radius: 4px;
-    background: #fef2f2; border: 1px solid #fecaca;
-    display: inline-block; margin-bottom: 4px;
+    background: #f8fbff; border-left: 3px solid #93c5fd; border-radius: 8px;
+    padding: 0.7rem 1rem; font-size: 0.76rem; color: #3b82f6;
+    line-height: 1.8; margin-top: 0.6rem; font-weight: 700;
 }
 </style>
 """, unsafe_allow_html=True)
 
+# ── Header ──
 st.markdown("""
 <div class="main-header">
   <div class="header-accent"></div>
-  <span style="font-size:2.6rem">🩺</span>
+  <span class="header-icon">🩺</span>
   <div>
-    <h1>Prédiction de Succès — Greffe de Moelle Osseuse</h1>
-    <p>Outil d'aide à la décision clinique · Groupe 24 · Coding Week 2026 · Ecole Centrale Casablanca</p>
+    <h1 style="color:#ffffff; font-weight:700;">Prédiction de Succès — Greffe de Moelle Osseuse</h1>
+    <p>Outil d'aide à la décision clinique &nbsp;·&nbsp; Groupe 24 &nbsp;·&nbsp; Coding Week 2026 &nbsp;·&nbsp; École Centrale Casablanca</p>
   </div>
 </div>
 """, unsafe_allow_html=True)
 
 st.markdown("<div style='margin-top:1rem'></div>", unsafe_allow_html=True)
-st.markdown('<p class="form-title">📋 Données Cliniques du Dossier</p>', unsafe_allow_html=True)
-st.markdown('<p class="form-subtitle">Renseignez toutes les informations disponibles pour obtenir la prédiction</p>', unsafe_allow_html=True)
+st.markdown('''
+<div style="text-align:center; margin:1.5rem 0 0.4rem 0;">
+  <div style="display:inline-block; background:linear-gradient(135deg,#f0f7ff,#e8f2ff); border-left:6px solid #3b82f6; border-radius:6px; padding:0.75rem 2.5rem; box-shadow:0 4px 16px rgba(59,130,246,0.15);">
+    <span style="font-family:Playfair Display,serif; font-size:1.7rem; font-weight:700; color:#1d4ed8; letter-spacing:-0.01em;">
+      📋 Dossier Patient
+    </span>
+  </div>
+</div>
+''', unsafe_allow_html=True)
+st.markdown('''
+<div style="text-align:center; margin-bottom:1.8rem;">
+  <span style="font-size:0.85rem; color:#64748b; font-weight:700; letter-spacing:0.05em; text-transform:uppercase;">
+    ── Renseignez les informations cliniques ──
+  </span>
+</div>
+''', unsafe_allow_html=True)
 
-# Session state pour erreurs inline
-if "field_errors" not in st.session_state:
-    st.session_state.field_errors = {}
+# ══════════════════════════════════════════════════════
+#  SESSION STATE
+# ══════════════════════════════════════════════════════
+for k, v in [("errs", {}), ("show_alert", False)]:
+    if k not in st.session_state:
+        st.session_state[k] = v
+for k, v in [("_val_Rbodymass","30"), ("_val_Donorage","30"),
+             ("_val_CD34","3.0"), ("_val_CD3dCD34","1.0"), ("_val_CD3dkgx10d8","2.0")]:
+    if k not in st.session_state:
+        st.session_state[k] = v
+
+def _clear_err(key):
+    if key in st.session_state.errs:
+        st.session_state.errs.pop(key, None)
+        if not st.session_state.errs:
+            st.session_state.show_alert = False
+
+def _update_age10():
+    """Met à jour automatiquement Receveur < 10 ans selon l'âge saisi."""
+    age = st.session_state.get("_ni_Recipientage", 8)
+    st.session_state["_sb_Recipientage10"] = 1 if age < 10 else 0
+
+def _update_ratio():
+    """Calcule automatiquement le Ratio CD3/CD34 si les deux valeurs sont valides."""
+    try:
+        cd34 = float(st.session_state.get("_val_CD34", "0").replace(",", ".").strip())
+        cd3  = float(st.session_state.get("_val_CD3dkgx10d8", "0").replace(",", ".").strip())
+        if cd34 > 0:
+            ratio = round(cd3 / cd34, 4)
+            st.session_state["_val_CD3dCD34"] = str(ratio)
+    except (ValueError, ZeroDivisionError):
+        pass
+    _clear_err("CD3dCD34_str")
 
 def ferr(key):
-    e = st.session_state.field_errors.get(key)
+    e = st.session_state.errs.get(key)
     if e:
-        st.markdown(f'<div style="color:#dc2626;font-size:0.78rem;margin-top:-8px;margin-bottom:6px;padding:3px 8px;background:#fef2f2;border-radius:4px;border:1px solid #fecaca">⚠️ {e}</div>', unsafe_allow_html=True)
+        st.markdown(
+            f'<div style="color:#dc2626;font-size:0.78rem;margin-top:-8px;margin-bottom:6px;'
+            f'padding:3px 8px;background:#fef2f2;border-radius:4px;border:1px solid #fecaca">⚠️ {e}</div>',
+            unsafe_allow_html=True
+        )
 
-with st.form("patient_data"):
+BADGE_SECTION = (
+    "display:inline-flex;align-items:center;gap:0.6rem;"
+    "font-family:'Playfair Display',serif;font-size:1.15rem;font-weight:700;color:#1e40af;"
+    "background:linear-gradient(135deg,#f0f7ff,#e8f2ff);"
+    "border-left:6px solid #3b82f6;border-radius:6px;"
+    "padding:0.65rem 2rem;box-shadow:0 4px 16px rgba(59,130,246,0.15);"
+)
 
-    st.markdown('<p class="section-title">👤 Receveur (Patient)</p>', unsafe_allow_html=True)
-    c1, c2, c3 = st.columns(3, gap="medium")
-    with c1:
-        Recipientage = st.number_input("Âge du receveur (années)", min_value=0, max_value=20, value=8, step=1)
-    with c2:
-        Recipientgender = st.selectbox("Sexe du receveur", [1, 0],
-                                       format_func=lambda x: "Masculin" if x == 1 else "Féminin")
-    with c3:
-        Rbodymass_str = st.text_input("Poids du receveur (kg)", value="30")
-        ferr("poids")
+def section_badge(icon, title):
+    st.markdown(f"""
+    <div style="text-align:center;margin:1.8rem 0 0.6rem 0;">
+      <span style="{BADGE_SECTION}">{icon} {title}</span>
+    </div>
+    <div style="height:2px;background:linear-gradient(90deg,transparent 0%,#dbeafe 30%,#bfdbfe 50%,#dbeafe 70%,transparent 100%);margin:0 0 1.2rem 0;border-radius:2px;"></div>
+    """, unsafe_allow_html=True)
 
-    c4, c5, c6 = st.columns(3, gap="medium")
-    with c4:
-        RecipientABO = st.selectbox("Groupe sanguin receveur", [0, 1, 2, 3],
-                                    format_func=lambda x: ["0","A","B","AB"][x])
-    with c5:
-        RecipientCMV = st.selectbox("CMV receveur (Cytomégalovirus)", [0, 1],
-                                    format_func=lambda x: "Absent" if x == 0 else "Présent")
-    with c6:
-        Recipientage10 = st.selectbox("Receveur < 10 ans ?", [0, 1],
-                                      format_func=lambda x: "Non" if x == 0 else "Oui")
+# ── Marqueur pour le scroll (placé AVANT les champs) ──
+st.markdown('<div id="error-anchor"></div>', unsafe_allow_html=True)
 
-    st.markdown('<p class="section-title">🧬 Donneur</p>', unsafe_allow_html=True)
-    d1, d2, d3 = st.columns(3, gap="medium")
-    with d1:
-        Donorage_str = st.text_input("Âge du donneur (années)", value="30")
-        ferr("donorage")
-    with d2:
-        DonorABO = st.selectbox("Groupe sanguin donneur", [0, 1, 2, 3],
+# ══════════════════════════════════════════════════════
+#  FORMULAIRE — widgets hors st.form pour on_change
+# ══════════════════════════════════════════════════════
+
+# ── Section Receveur ──
+section_badge("👤", "Receveur (Patient)")
+c1, c2, c3 = st.columns(3, gap="medium")
+with c1:
+    Recipientage = st.number_input("Âge du receveur (années)", min_value=0, max_value=20, value=8, step=1, key="_ni_Recipientage", on_change=_update_age10)
+with c2:
+    Recipientgender = st.selectbox("Sexe du receveur", [1, 0], key="_sb_Recipientgender",
+                                   format_func=lambda x: "Masculin" if x == 1 else "Féminin")
+with c3:
+    st.text_input("Poids du receveur (kg)", key="_val_Rbodymass",
+                  on_change=lambda: _clear_err("Rbodymass_str"))
+    ferr("Rbodymass_str")
+
+c4, c5, c6 = st.columns(3, gap="medium")
+with c4:
+    RecipientABO = st.selectbox("Groupe sanguin receveur", [0, 1, 2, 3], key="_sb_RecipientABO",
                                 format_func=lambda x: ["0","A","B","AB"][x])
-    with d3:
-        DonorCMV = st.selectbox("CMV donneur (Cytomégalovirus)", [0, 1],
+with c5:
+    RecipientCMV = st.selectbox("CMV receveur (Cytomégalovirus)", [0, 1], key="_sb_RecipientCMV",
                                 format_func=lambda x: "Absent" if x == 0 else "Présent")
+with c6:
+    _age10_val = 1 if st.session_state.get("_ni_Recipientage", 8) < 10 else 0
+    st.session_state["_sb_Recipientage10"] = _age10_val
+    Recipientage10 = _age10_val
+    _label10 = "✅ Oui (< 10 ans)" if _age10_val == 1 else "Non (≥ 10 ans)"
+    st.markdown(f'''<div style="margin-top:1.6rem;"><label style="color:#1e40af;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;">RECEVEUR &lt; 10 ANS ?</label><div style="background:#f0f7ff;border:2px solid #bfdbfe;border-radius:10px;padding:0.55rem 1rem;margin-top:4px;font-weight:700;color:#1e40af;font-size:0.95rem;">{_label10} <span style="color:#64748b;font-size:0.75rem;font-weight:600;">(auto)</span></div></div>''', unsafe_allow_html=True)
 
-    st.markdown('<p class="section-title">🔬 Compatibilité Immunologique</p>', unsafe_allow_html=True)
-    i1, i2, i3 = st.columns(3, gap="medium")
-    with i1:
-        HLAmatch = st.selectbox("Compatibilité HLA (antigènes leucocytaires)", [10, 9, 8, 7],
-                                format_func=lambda x: f"{x}/10")
-    with i2:
-        HLAmismatch = st.number_input("Antigènes HLA différents", min_value=0, max_value=3, value=0, step=1)
-    with i3:
-        ABOmatch = st.selectbox("Compatibilité ABO (groupe sanguin)", [1, 0],
-                                format_func=lambda x: "Compatible" if x == 1 else "Incompatible")
+# ── Section Donneur ──
+section_badge("🧬", "Donneur")
+d1, d2, d3 = st.columns(3, gap="medium")
+with d1:
+    st.text_input("Âge du donneur (années)", key="_val_Donorage",
+                  on_change=lambda: _clear_err("Donorage_str"))
+    ferr("Donorage_str")
+with d2:
+    DonorABO = st.selectbox("Groupe sanguin donneur", [0, 1, 2, 3], key="_sb_DonorABO",
+                            format_func=lambda x: ["0","A","B","AB"][x])
+with d3:
+    DonorCMV = st.selectbox("CMV donneur (Cytomégalovirus)", [0, 1], key="_sb_DonorCMV",
+                            format_func=lambda x: "Absent" if x == 0 else "Présent")
 
-    i4, i5, i6 = st.columns(3, gap="medium")
-    with i4:
-        Antigen = st.number_input("Antigènes incompatibles", min_value=0, max_value=3, value=0, step=1)
-    with i5:
-        Alel = st.number_input("Allèles incompatibles", min_value=0, max_value=4, value=0, step=1)
-    with i6:
-        Gendermatch = st.selectbox("Concordance sexe donneur/receveur", [1, 0],
-                                   format_func=lambda x: "Concordant" if x == 1 else "Discordant")
+# ── Section Immunologie ──
+section_badge("🔬", "Compatibilité Immunologique")
+i1, i2, i3 = st.columns(3, gap="medium")
+with i1:
+    HLAmatch = st.selectbox("Compatibilité HLA (antigènes leucocytaires)", [10, 9, 8, 7], key="_sb_HLAmatch",
+                            format_func=lambda x: f"{x}/10")
+with i2:
+    HLAmismatch = st.number_input("Antigènes HLA différents", min_value=0, max_value=3, value=0, step=1, key="_ni_HLAmismatch")
+with i3:
+    ABOmatch = st.selectbox("Compatibilité ABO (groupe sanguin)", [1, 0], key="_sb_ABOmatch",
+                            format_func=lambda x: "Compatible" if x == 1 else "Incompatible")
 
-    st.markdown('<p class="section-title">🏥 Maladie & Protocole</p>', unsafe_allow_html=True)
-    p1, p2, p3 = st.columns(3, gap="medium")
-    with p1:
-        Disease = st.selectbox("Diagnostic",
-                               ["ALL", "AML", "CML", "MDS", "SAA", "Fanconi", "other"],
-                               format_func=lambda x: x if x != "other" else "Autre")
-    with p2:
-        Riskgroup = st.selectbox("Groupe de risque", [0, 1],
-                                 format_func=lambda x: "Faible" if x == 0 else "Élevé")
-    with p3:
-        Stemcellsource = st.selectbox("Source cellules souches", [0, 1],
-                                      format_func=lambda x: "Moelle Osseuse" if x == 0 else "Sang Périphérique")
+i4, i5, i6 = st.columns(3, gap="medium")
+with i4:
+    Antigen = st.number_input("Antigènes incompatibles", min_value=0, max_value=3, value=0, step=1, key="_ni_Antigen")
+with i5:
+    Alel = st.number_input("Allèles incompatibles", min_value=0, max_value=4, value=0, step=1, key="_ni_Alel")
+with i6:
+    Gendermatch = st.selectbox("Concordance sexe donneur/receveur", [1, 0], key="_sb_Gendermatch",
+                               format_func=lambda x: "Concordant" if x == 1 else "Discordant")
 
-    p4, p5, p6 = st.columns(3, gap="medium")
-    with p4:
-        Txpostrelapse = st.selectbox("Greffe après rechute de la maladie ?", [0, 1],
-                                     format_func=lambda x: "Non" if x == 0 else "Oui")
-    with p5:
-        Diseasegroup = st.selectbox("Groupe maladie", [0, 1],
-                                    format_func=lambda x: "Non-maligne" if x == 0 else "Maligne")
-    with p6:
-        IIIV = st.selectbox("Stade avancé de la maladie (II à IV)", [0, 1],
-                            format_func=lambda x: "Non" if x == 0 else "Oui")
+# ── Section Maladie ──
+section_badge("🏥", "Maladie & Protocole")
+p1, p2, p3 = st.columns(3, gap="medium")
+with p1:
+    Disease = st.selectbox("Diagnostic",
+                           ["ALL", "AML", "CML", "MDS", "SAA", "Fanconi", "other"], key="_sb_Disease",
+                           format_func=lambda x: x if x != "other" else "Autre")
+with p2:
+    Riskgroup = st.selectbox("Groupe de risque", [0, 1], key="_sb_Riskgroup",
+                             format_func=lambda x: "Faible" if x == 0 else "Élevé")
+with p3:
+    Stemcellsource = st.selectbox("Source cellules souches", [0, 1], key="_sb_Stemcellsource",
+                                  format_func=lambda x: "Moelle Osseuse" if x == 0 else "Sang Périphérique")
 
-    p7, = st.columns(1)
-    with p7:
-        CMVstatus = st.selectbox("Statut CMV combiné (donneur/receveur)", [0, 1, 2, 3],
-                                 format_func=lambda x: ["−/−","−/+","+/−","+/+"][x])
+p4, p5, p6 = st.columns(3, gap="medium")
+with p4:
+    Txpostrelapse = st.selectbox("Greffe après rechute de la maladie ?", [0, 1], key="_sb_Txpostrelapse",
+                                 format_func=lambda x: "Non" if x == 0 else "Oui")
+with p5:
+    Diseasegroup = st.selectbox("Groupe maladie", [0, 1], key="_sb_Diseasegroup",
+                                format_func=lambda x: "Non-maligne" if x == 0 else "Maligne")
+with p6:
+    IIIV = st.selectbox("Stade avancé de la maladie (II à IV)", [0, 1], key="_sb_IIIV",
+                        format_func=lambda x: "Non" if x == 0 else "Oui")
 
-    st.markdown('<p class="section-title">💉 Données de la Greffe</p>', unsafe_allow_html=True)
-    g1, g2, g3 = st.columns(3, gap="medium")
-    with g1:
-        CD34_str = st.text_input("Dose CD34+ (cellules souches, ×10⁶/kg)", value="3.0")
-        ferr("cd34")
-    with g2:
-        CD3dCD34_str = st.text_input("Ratio CD3/CD34", value="1.0")
-        ferr("cd3dcd34")
-    with g3:
-        CD3dkgx10d8_str = st.text_input("CD3+ (×10⁸/kg)", value="2.0")
-        ferr("cd3dkgx10d8")
+p7, = st.columns(1)
+with p7:
+    CMVstatus = st.selectbox("Statut CMV combiné (donneur/receveur)", [0, 1, 2, 3], key="_sb_CMVstatus",
+                             format_func=lambda x: ["−/−","−/+","+/−","+/+"][x])
 
-    st.markdown("<div style='margin-top:0.6rem'></div>", unsafe_allow_html=True)
-    submit = st.form_submit_button("⚡ Calculer la probabilité de succès")
+# ── Section Greffe ──
+section_badge("💉", "Données de la Greffe")
+g1, g2, g3 = st.columns(3, gap="medium")
+with g1:
+    st.text_input("Dose CD34+ (cellules souches, ×10⁶/kg)", key="_val_CD34",
+                  on_change=lambda: (_clear_err("CD34_str"), _update_ratio()))
+    ferr("CD34_str")
+with g2:
+    # Ratio calculé automatiquement — champ grisé en lecture seule
+    _ratio_val = st.session_state.get("_val_CD3dCD34", "1.0")
+    st.markdown(f'''<div><label style="color:#1e40af;font-size:0.78rem;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;">RATIO CD3/CD34</label><div style="background:#f8fafc;border:2px solid #e2e8f0;border-radius:10px;padding:0.55rem 1rem;margin-top:4px;font-weight:700;color:#64748b;font-size:0.95rem;">{_ratio_val} <span style="color:#94a3b8;font-size:0.75rem;font-weight:600;">(auto)</span></div></div>''', unsafe_allow_html=True)
+    ferr("CD3dCD34_str")
+with g3:
+    st.text_input("CD3+ (×10⁸/kg)", key="_val_CD3dkgx10d8",
+                  on_change=lambda: (_clear_err("CD3dkgx10d8_str"), _update_ratio()))
+    ferr("CD3dkgx10d8_str")
 
+st.markdown("<div style='margin-top:0.8rem'></div>", unsafe_allow_html=True)
+submit = st.button("🔬  Calculer la Probabilité de Succès  →", use_container_width=True)
+
+# ── Bannière d'erreur globale + son + scroll ──
+if st.session_state.show_alert and st.session_state.errs:
+    st.markdown("""
+    <div id="error-banner" style="background:linear-gradient(135deg,#fff1f2,#ffe4e6);
+        border:2px solid #ef4444; border-left:6px solid #dc2626; border-radius:12px;
+        padding:1rem 1.5rem; margin-top:0.8rem;
+        display:flex; align-items:center; gap:0.8rem;
+        box-shadow:0 4px 20px rgba(239,68,68,0.25);">
+      <span style="font-size:1.8rem;">🚨</span>
+      <div>
+        <div style="font-size:1rem;font-weight:900;color:#dc2626;">Formulaire incomplet</div>
+        <div style="font-size:0.85rem;font-weight:700;color:#b91c1c;margin-top:3px;">
+          Vous n'avez pas bien renseigné une ou plusieurs cases.<br>
+          Veuillez corriger les champs indiqués en rouge ci-dessus.
+        </div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+    components.html("""
+    <script>
+    (function(){
+        // Son d'alerte
+        try{
+            var ctx=new(window.AudioContext||window.webkitAudioContext)();
+            function b(f,t,d,v){var o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=f;o.type='square';g.gain.setValueAtTime(v,ctx.currentTime+t);g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+d);o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+d+0.05);}
+            b(880,0.00,0.15,0.7);b(660,0.18,0.15,0.7);b(440,0.36,0.25,0.7);
+        }catch(e){}
+        // Scroll vers l'ancre error-anchor (placée avant les champs en erreur)
+        function doScroll(){
+            try{
+                var doc = window.parent.document;
+                var el = doc.getElementById('error-anchor');
+                if(el){
+                    el.scrollIntoView({behavior:'smooth', block:'start'});
+                    return true;
+                }
+                // fallback : scroll vers le haut de la page
+                window.parent.scrollTo({top: 0, behavior:'smooth'});
+            }catch(e){}
+            return false;
+        }
+        // Essayer plusieurs fois car Streamlit peut mettre du temps à rendre
+        setTimeout(doScroll, 100);
+        setTimeout(doScroll, 400);
+        setTimeout(doScroll, 800);
+    })();
+    </script>
+    """, height=0)
+
+# ══════════════════════════════════════════════════════
+#  TRAITEMENT APRÈS SOUMISSION
+# ══════════════════════════════════════════════════════
 if submit:
 
-    # ── Validation avec erreurs inline via session_state ──
-    st.session_state.field_errors = {}
-    Rbodymass    = None
-    Donorage     = None
-    CD34kgx10d6  = None
-    CD3dCD34     = None
-    CD3dkgx10d8  = None
+    Rbodymass_str   = st.session_state.get("_val_Rbodymass",   "30")
+    Donorage_str    = st.session_state.get("_val_Donorage",    "30")
+    CD34_str        = st.session_state.get("_val_CD34",        "3.0")
+    CD3dCD34_str    = st.session_state.get("_val_CD3dCD34",    "1.0")
+    CD3dkgx10d8_str = st.session_state.get("_val_CD3dkgx10d8", "2.0")
+
+    had_errs_before = bool(st.session_state.errs)
+    new_errs = {}
+    Rbodymass = None; Donorage = None; CD34kgx10d6 = None; CD3dCD34 = None; CD3dkgx10d8 = None
 
     try:
-        Rbodymass = float(str(Rbodymass_str).replace(",", ".").strip())
+        Rbodymass = float(Rbodymass_str.replace(",", ".").strip())
         if not (3.0 <= Rbodymass <= 150.0):
-            st.session_state.field_errors["poids"] = "Valeur invalide — entrez un nombre entre 3 et 150 kg"
+            new_errs["Rbodymass_str"] = "Vous devez choisir un nombre compris entre 3 et 150 kg"
             Rbodymass = None
     except ValueError:
-        st.session_state.field_errors["poids"] = f"Valeur invalide — entrez un nombre entre 3 et 150 (ex : 28.5)"
+        new_errs["Rbodymass_str"] = "Vous devez saisir un nombre valide compris entre 3 et 150 (ex : 28.5)"
 
     try:
-        Donorage = float(str(Donorage_str).replace(",", ".").strip())
-        if not (18 <= Donorage <= 70):
-            st.session_state.field_errors["donorage"] = "Valeur invalide — entrez un nombre entre 18 et 70 ans"
+        Donorage = float(Donorage_str.replace(",", ".").strip())
+        if not (18.0 <= Donorage <= 70.0):
+            new_errs["Donorage_str"] = "Vous devez choisir un nombre compris entre 18 et 70 ans"
             Donorage = None
     except ValueError:
-        st.session_state.field_errors["donorage"] = f"Valeur invalide — entrez un nombre entre 18 et 70 (ex : 30)"
+        new_errs["Donorage_str"] = "Vous devez saisir un nombre valide compris entre 18 et 70 (ex : 30)"
 
     try:
-        CD34kgx10d6 = float(str(CD34_str).replace(",", ".").strip())
+        CD34kgx10d6 = float(CD34_str.replace(",", ".").strip())
         if not (0.1 <= CD34kgx10d6 <= 30.0):
-            st.session_state.field_errors["cd34"] = "Valeur invalide — entrez un nombre entre 0.1 et 30"
+            new_errs["CD34_str"] = "Vous devez choisir un nombre compris entre 0.1 et 30"
             CD34kgx10d6 = None
     except ValueError:
-        st.session_state.field_errors["cd34"] = f"Valeur invalide — entrez un nombre entre 0.1 et 30 (ex : 3.5)"
+        new_errs["CD34_str"] = "Vous devez saisir un nombre valide compris entre 0.1 et 30 (ex : 3.5)"
 
     try:
-        CD3dCD34 = float(str(CD3dCD34_str).replace(",", ".").strip())
+        CD3dCD34 = float(CD3dCD34_str.replace(",", ".").strip())
     except ValueError:
-        st.session_state.field_errors["cd3dcd34"] = f"Valeur invalide — entrez un nombre décimal (ex : 1.0)"
+        new_errs["CD3dCD34_str"] = "Vous devez saisir un nombre décimal valide (ex : 1.0)"
 
     try:
-        CD3dkgx10d8 = float(str(CD3dkgx10d8_str).replace(",", ".").strip())
+        CD3dkgx10d8 = float(CD3dkgx10d8_str.replace(",", ".").strip())
     except ValueError:
-        st.session_state.field_errors["cd3dkgx10d8"] = f"Valeur invalide — entrez un nombre décimal (ex : 2.0)"
+        new_errs["CD3dkgx10d8_str"] = "Vous devez saisir un nombre décimal valide (ex : 2.0)"
 
-    if st.session_state.field_errors:
+    if new_errs:
+        st.session_state.errs       = new_errs
+        st.session_state.show_alert = True   # son + alerte dès la 1ère saisie invalide
         st.rerun()
+
+    st.session_state.errs       = {}
+    st.session_state.show_alert = False
+
+    Recipientage = int(Recipientage)
+    HLAmismatch  = int(HLAmismatch)
+    Antigen      = int(Antigen)
+    Alel         = int(Alel)
 
     warnings_list = []
     if Recipientage < 10:
         warnings_list.append("🔴 Receveur pédiatrique critique (< 10 ans) — protocole adapté recommandé.")
-    if Donorage and Donorage >= 35:
+    if Donorage >= 35:
         warnings_list.append("🟡 Âge du donneur ≥ 35 ans — facteur moins favorable.")
     if DonorCMV == 1 and RecipientCMV == 0:
         warnings_list.append("🟠 CMV donneur+ / receveur− — risque de réactivation élevé.")
@@ -355,39 +591,25 @@ if submit:
         st.stop()
 
     try:
-        Donorage35      = 1 if (Donorage and Donorage < 35) else 0
+        Donorage35      = 1 if Donorage < 35 else 0
         Recipientageint = 0 if Recipientage < 5 else (1 if Recipientage < 10 else (2 if Recipientage < 15 else 3))
         HLAgrI          = round(HLAmatch / 10, 1)
 
         input_df = pd.DataFrame([{
-            "Recipientgender":      Recipientgender,
-            "Stemcellsource":       Stemcellsource,
-            "Donorage":             Donorage,
-            "Donorage35":           Donorage35,
-            "IIIV":                 IIIV,
-            "Gendermatch":          Gendermatch,
-            "DonorABO":             DonorABO,
-            "RecipientABO":         RecipientABO,
-            "ABOmatch":             ABOmatch,
-            "CMVstatus":            CMVstatus,
-            "DonorCMV":             DonorCMV,
-            "RecipientCMV":         RecipientCMV,
-            "Disease":              Disease,
-            "Riskgroup":            Riskgroup,
-            "Txpostrelapse":        Txpostrelapse,
-            "Diseasegroup":         Diseasegroup,
-            "HLAmatch":             HLAmatch,
-            "HLAmismatch":          HLAmismatch,
-            "Antigen":              Antigen,
-            "Alel":                 Alel,
-            "HLAgrI":               HLAgrI,
-            "Recipientage":         Recipientage,
-            "Recipientage10":       Recipientage10,
-            "Recipientageint":      Recipientageint,
-            "CD34kgx10d6":          CD34kgx10d6,
-            "CD3dCD34":             CD3dCD34,
-            "CD3dkgx10d8":          CD3dkgx10d8,
-            "Rbodymass":            Rbodymass,
+            "Recipientgender":  Recipientgender,  "Stemcellsource":   Stemcellsource,
+            "Donorage":         Donorage,          "Donorage35":       Donorage35,
+            "IIIV":             IIIV,              "Gendermatch":      Gendermatch,
+            "DonorABO":         DonorABO,          "RecipientABO":     RecipientABO,
+            "ABOmatch":         ABOmatch,          "CMVstatus":        CMVstatus,
+            "DonorCMV":         DonorCMV,          "RecipientCMV":     RecipientCMV,
+            "Disease":          Disease,           "Riskgroup":        Riskgroup,
+            "Txpostrelapse":    Txpostrelapse,     "Diseasegroup":     Diseasegroup,
+            "HLAmatch":         HLAmatch,          "HLAmismatch":      HLAmismatch,
+            "Antigen":          Antigen,           "Alel":             Alel,
+            "HLAgrI":           HLAgrI,            "Recipientage":     Recipientage,
+            "Recipientage10":   Recipientage10,    "Recipientageint":  Recipientageint,
+            "CD34kgx10d6":      CD34kgx10d6,       "CD3dCD34":         CD3dCD34,
+            "CD3dkgx10d8":      CD3dkgx10d8,       "Rbodymass":        Rbodymass,
         }])
 
         input_df   = handle_missing_values(input_df)
@@ -397,7 +619,6 @@ if submit:
         if "__none__" in data_ready.columns:
             data_ready = data_ready.drop(columns=["__none__"])
 
-        # Aligner les colonnes exactement sur ce que le modèle attend
         if HAS_MODEL and hasattr(model, "feature_names_in_"):
             expected_cols = list(model.feature_names_in_)
             for col in expected_cols:
@@ -467,9 +688,15 @@ if submit:
         st.markdown("<div style='margin-top:1rem'></div>", unsafe_allow_html=True)
 
         with st.container():
-            st.markdown('<div class="shap-card">', unsafe_allow_html=True)
-            st.markdown('<p class="shap-title">📊 Explicabilité SHAP</p>', unsafe_allow_html=True)
-            st.markdown('<p class="shap-subtitle">Contribution de chaque paramètre clinique à la prédiction finale</p>', unsafe_allow_html=True)
+            st.markdown('''
+            <div style="text-align:center; margin-bottom:1.2rem;">
+              <div style="display:inline-block; background:linear-gradient(135deg,#dbeafe,#bfdbfe); border:2.5px solid #60a5fa; padding:0.7rem 2.5rem; border-radius:16px; margin-bottom:0.8rem; box-shadow:0 4px 16px rgba(59,130,246,0.2);">
+                <span style="color:#1d4ed8; font-size:1.4rem; font-weight:800; font-family:Playfair Display,serif; letter-spacing:0.02em;">📊 &nbsp; Analyse SHAP</span>
+              </div>
+              <p class="shap-title" style="margin:0.4rem 0 0.3rem 0; font-size:1.6rem;">Explicabilité de la Prédiction</p>
+              <p class="shap-subtitle">Contribution de chaque paramètre clinique à la décision du modèle</p>
+            </div>
+            ''', unsafe_allow_html=True)
 
             feature_names = list(data_ready.columns)
 
@@ -477,14 +704,10 @@ if submit:
                 try:
                     explainer = shap.TreeExplainer(model)
                     shap_vals = explainer.shap_values(data_ready)
-                    # RandomForest renvoie une liste [class0, class1], shape (n_samples, n_features)
-                    # XGBoost renvoie un array 2D (n_samples, n_features)
                     if isinstance(shap_vals, list):
-                        # classification binaire : prendre classe 1
                         sv = shap_vals[1]
                     else:
                         sv = shap_vals
-                    # sv peut être 2D (n_samples, n_features) ou 1D
                     if hasattr(sv, 'ndim') and sv.ndim == 2:
                         shap_values = sv[0]
                     else:
@@ -598,7 +821,7 @@ if submit:
                     "CMV combiné":      "Combinaison des statuts CMV donneur et receveur.",
                     "CMV donneur":      "CMV donneur+ / receveur− = risque élevé.",
                     "CMV receveur":     "Détermine le risque de réactivation CMV post-greffe.",
-                    "Maladie":          "La pathologie détermine le protocole et le pronostic.",
+                    "Maladie (ALL)":    "La pathologie détermine le protocole et le pronostic.",
                     "Maladie AML":      "Leucémie myéloïde aiguë.",
                     "Maladie chronique":"Leucémie myéloïde chronique.",
                     "Lymphome":         "Lymphome — pronostic variable.",
@@ -638,11 +861,6 @@ if submit:
                       </div>
                     </div>
                     """, unsafe_allow_html=True)
-
-
-            st.markdown("</div>", unsafe_allow_html=True)
-
-
 
     except Exception as e:
         st.error(f"Erreur lors du traitement : {e}")

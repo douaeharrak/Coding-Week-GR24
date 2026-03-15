@@ -349,7 +349,7 @@ Liste complète disponible dans `requirements.txt`.
 | NADA Hassar | nada.hassar@centrale-casablanca.ma |
 | WANDAOGO Zenabou | zenabou.wandaogo@centrale-casablanca.ma— |
 
-**Encadrement :** Kawtar ZERHOUNI et Équipe pédagogique — École Centrale Casablanca
+**Encadrement :** Rym NASSIH et Équipe pédagogique — École Centrale Casablanca
 
 ---
 
